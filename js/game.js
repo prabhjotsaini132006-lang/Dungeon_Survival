@@ -19,6 +19,15 @@ window.addEventListener("keyup", (event) => {
     keys[event.key.toLowerCase()] = false;
 });
 
+const walls = [
+    { x: 100, y: 100, width: 200, height: 30 },
+    { x: 500, y: 100, width: 200, height: 30 },
+    { x: 100, y: 470, width: 200, height: 30 },
+    { x: 500, y: 470, width: 200, height: 30 },
+    { x: 100, y: 130, width: 30, height: 340 },
+    { x: 670, y: 130, width: 30, height: 340 }
+];
+
 function isColliding(rect1, rect2) {
     return (
         rect1.x < rect2.x + rect2.width &&
@@ -87,21 +96,24 @@ function updatePlayer(){
 
 }
 
-
-const walls = [
-    { x: 100, y: 100, width: 200, height: 30 },
-    { x: 500, y: 100, width: 200, height: 30 },
-    { x: 100, y: 470, width: 200, height: 30 },
-    { x: 500, y: 470, width: 200, height: 30 },
-    { x: 100, y: 130, width: 30, height: 340 },
-    { x: 670, y: 130, width: 30, height: 340 }
-];
-
+function drawFloor(){
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+}
 function drawWalls(){
-    ctx.fillStyle = "#555";
 
     for (const wall of walls) {
+        ctx.fillStyle = "#3b3b3b";
         ctx.fillRect(
+            wall.x,
+            wall.y,
+            wall.width,
+            wall.height
+        );
+
+        ctx.strokeStyle = "#666";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
             wall.x,
             wall.y,
             wall.width,
@@ -111,19 +123,28 @@ function drawWalls(){
 }
 
 function drawPlayer(){
-    ctx.fillStyle = "blue";
-
+    ctx.fillStyle = "#3498db";
     ctx.fillRect(
         player.x,
         player.y,
         player.width,
         player.height
     );
+
+    ctx.strokeStyle = "#ffffff";
+     ctx.lineWidth = 2;
+        ctx.strokeRect(
+        player.x,
+        player.y,
+        player.width,
+        player.height
+        );
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    drawFloor();
     drawWalls();
     drawPlayer();
 }
