@@ -109,4 +109,21 @@ function drawPlayer(ctx) {
     );
 }
 
-export { player, updatePlayer, drawPlayer };
+function checkLevelUp(){
+    if(player.xp >= player.xpToNextLevel){
+
+        player.xp -= player.xpToNextLevel;
+
+        player.level +=1;
+
+        player.xpToNextLevel =
+            Math.floor(player.xpToNextLevel * 1.25);
+
+        player.maxHealth += 10;
+        player.health = player.maxHealth;
+
+        player.speed += 0.2;
+    }
+}
+
+export { player, updatePlayer, drawPlayer,checkLevelUp };

@@ -1,6 +1,6 @@
 import { keys } from "./input.js";
 import { player } from "./player.js";
-import { enemy, isEnemyAlive } from "./enemy.js";
+import { enemies } from "./enemy.js";
 import { isColliding } from "./collision.js";
 
 const attack = {
@@ -14,6 +14,7 @@ const attack = {
 };
 
 function getAttackBox() {
+
     const box = {
         x: player.x,
         y: player.y,
@@ -53,32 +54,38 @@ function getAttackBox() {
 }
 
 function updateCombat() {
+
     const currentTime = performance.now();
 
     if (
         keys[" "] &&
         currentTime - attack.lastAttackTime >= attack.cooldown
     ) {
+
         const attackBox = getAttackBox();
-    
-    if (
-    isEnemyAlive() &&
-    isColliding(attackBox, enemy)
-) {
 
-    const wasAlive = enemy.health > 0;
+        for (const enemy of enemies) {
 
-    enemy.health -= attack.damage;
+            if (enemy.health <= 0) {
+                continue;
+            }
 
-    if (enemy.health < 0) {
-        enemy.health = 0;
-    }
+            if (isColliding(attackBox, enemy)) {
 
-    if (wasAlive && enemy.health === 0) {
-        player.xp += 25;
-        player.score += 100;
-    }
-}
+                const wasAlive = enemy.health > 0;
+
+                enemy.health -= attack.damage;
+
+                if (enemy.health < 0) {
+                    enemy.health = 0;
+                }
+
+                if (wasAlive && enemy.health === 0) {
+                    player.xp += 25;
+                    player.score += 100;
+                }
+            }
+        }
 
         attack.lastAttackTime = currentTime;
 
@@ -92,6 +99,7 @@ function updateCombat() {
 }
 
 function drawAttack(ctx) {
+
     if (!attack.active) {
         return;
     }
@@ -108,4 +116,7 @@ function drawAttack(ctx) {
     );
 }
 
-export { updateCombat, drawAttack };
+export {
+    updateCombat,
+    drawAttack
+};
