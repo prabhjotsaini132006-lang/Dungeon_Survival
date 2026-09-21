@@ -5,6 +5,47 @@ import { boss } from "./boss.js";
 import { isColliding } from "./collision.js";
 import { gameState } from "./gameState.js";
 
+
+const damageNumbers = [];
+
+function createDamageNumber(enemy, damage) {
+    damageNumbers.push({
+        x: enemy.x + enemy.width / 2,
+        y: enemy.y,
+        damage: damage,
+        life: 500,
+        createdAt: performance.now()
+    });
+}
+
+function drawDamageNumbers(ctx) {
+    const currentTime = performance.now();
+
+    for (let i = damageNumbers.length - 1; i >= 0; i--) {
+        const number = damageNumbers[i];
+
+        const elapsed = currentTime - number.createdAt;
+        const progress = elapsed / number.life;
+
+        if (progress >= 1) {
+            damageNumbers.splice(i, 1);
+            continue;
+        }
+
+        number.y -= 0.5;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 18px Arial";
+        ctx.textAlign = "center";
+
+        ctx.fillText(
+            `-${number.damage}`,
+            number.x,
+            number.y
+        );
+    }
+}
+
 const attack = {
     width: 30,
     height: 30,
@@ -77,10 +118,14 @@ function updateCombat() {
                 const wasAlive = enemy.health > 0;
 
                 enemy.health -= attack.damage;
+                createDamageNumber(enemy, attack.damage);
 
                 if (enemy.health < 0) {
                     enemy.health = 0;
                 }
+
+                enemy.hitFlash = true;
+                enemy.hitFlashUntil = performance.now() + 100;
 
                 if (wasAlive && enemy.health === 0) {
                     player.xp += 25;
@@ -120,24 +165,62 @@ function updateCombat() {
 }
 
 function drawAttack(ctx) {
+    if (!attack.active) return;
 
-    if (!attack.active) {
-        return;
+    const progress =
+        1 - (attack.activeUntil - performance.now()) / 100;
+
+    const centerX = player.x + player.width / 2;
+    const centerY = player.y + player.height / 2;
+
+    ctx.save();
+
+    ctx.translate(centerX, centerY);
+
+    let angle = 0;
+
+    if (player.direction === "right") {
+        angle = -Math.PI / 4 + progress * (Math.PI / 2);
     }
 
-    const attackBox = getAttackBox();
+    if (player.direction === "left") {
+        angle = Math.PI * 3 / 4 + progress * (Math.PI / 2);
+    }
 
-    ctx.fillStyle = "#f1c40f";
+    if (player.direction === "up") {
+        angle = -Math.PI / 2 + progress * Math.PI;
+    }
 
-    ctx.fillRect(
-        attackBox.x,
-        attackBox.y,
-        attackBox.width,
-        attackBox.height
-    );
+    if (player.direction === "down") {
+        angle = Math.PI / 2 + progress * Math.PI;
+    }
+
+    ctx.rotate(angle);
+
+   
+    ctx.strokeStyle = "#ecf0f1";
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(10, 0);
+    ctx.lineTo(45, 0);
+    ctx.stroke();
+
+
+    ctx.strokeStyle = "#8e6e53";
+    ctx.lineWidth = 5;
+
+    ctx.beginPath();
+    ctx.moveTo(5, -8);
+    ctx.lineTo(5, 8);
+    ctx.stroke();
+
+    ctx.restore();
 }
 
 export {
     updateCombat,
-    drawAttack
+    drawAttack,
+    drawDamageNumbers
 };

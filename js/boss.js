@@ -33,7 +33,6 @@ function updateBoss() {
         return;
     }
 
-    // Move toward player
     if (boss.x < player.x) {
         boss.x += boss.speed;
     }
@@ -74,7 +73,6 @@ function drawBoss(ctx) {
         return;
     }
 
-    // Boss body
     ctx.fillStyle = "#8e44ad";
     ctx.fillRect(
         boss.x,
@@ -83,7 +81,6 @@ function drawBoss(ctx) {
         boss.height
     );
 
-    // Boss outline
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 3;
 
@@ -94,7 +91,6 @@ function drawBoss(ctx) {
         boss.height
     );
 
-    // Boss health bar background
     ctx.fillStyle = "#333333";
     ctx.fillRect(
         boss.x,
@@ -103,7 +99,6 @@ function drawBoss(ctx) {
         8
     );
 
-    // Boss health
     ctx.fillStyle = "#e74c3c";
     ctx.fillRect(
         boss.x,
@@ -113,9 +108,20 @@ function drawBoss(ctx) {
     );
 }
 
+function resetBoss() {
+    boss.x = 350;
+    boss.y = 100;
+
+    boss.health = boss.maxHealth;
+    boss.active = false;
+
+    boss.lastAttackTime = 0;
+}
+
 export {
     boss,
     startBoss,
     updateBoss,
-    drawBoss
+    drawBoss,
+    resetBoss
 };

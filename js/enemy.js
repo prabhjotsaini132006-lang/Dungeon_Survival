@@ -62,7 +62,10 @@ function createEnemy(x, y) {
         maxHealth: 100,
 
         attackCooldown: 500,
-        lastAttackTime: 0
+        lastAttackTime: 0,
+
+        hitFlash: false,
+        hitFlashUntil: 0
     };
 }
 
@@ -126,7 +129,14 @@ function drawEnemies(ctx) {
             continue;
         }
 
+       const currentTime = performance.now();
+
+    if (enemy.hitFlash && currentTime < enemy.hitFlashUntil) {
+        ctx.fillStyle = "#ffffff";
+    } else {
+        enemy.hitFlash = false;
         ctx.fillStyle = "#e74c3c";
+    }
 
         ctx.fillRect(
             enemy.x,
@@ -147,6 +157,9 @@ function drawEnemies(ctx) {
     }
 }
 
+function resetEnemies(){
+    enemies.length = 0;
+}
 export {
     enemies,
     createEnemy,
@@ -154,5 +167,6 @@ export {
     updateEnemies,
     drawEnemies,
     startWave,
-    startNextWave
+    startNextWave,
+    resetEnemies
 };

@@ -89,24 +89,66 @@ function updatePlayer(canvas) {
 }
 
 function drawPlayer(ctx) {
+    const centerX = player.x + player.width / 2;
+    const centerY = player.y + player.height / 2;
+
+
     ctx.fillStyle = "#3498db";
-
     ctx.fillRect(
-        player.x,
-        player.y,
-        player.width,
-        player.height
+        player.x + 8,
+        player.y + 12,
+        player.width - 16,
+        player.height - 12
     );
 
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 2;
-
-    ctx.strokeRect(
-        player.x,
-        player.y,
-        player.width,
-        player.height
+    ctx.fillStyle = "#f1c40f";
+    ctx.beginPath();
+    ctx.arc(
+        centerX,
+        player.y + 12,
+        12,
+        0,
+        Math.PI * 2
     );
+    ctx.fill();
+
+
+    ctx.fillStyle = "#222222";
+
+    if (player.direction === "left") {
+        ctx.fillRect(centerX - 8, player.y + 8, 4, 4);
+        ctx.fillRect(centerX - 2, player.y + 8, 4, 4);
+    } else {
+        ctx.fillRect(centerX + 2, player.y + 8, 4, 4);
+        ctx.fillRect(centerX + 8, player.y + 8, 4, 4);
+    }
+
+    ctx.strokeStyle = "#ecf0f1";
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+
+    if (player.direction === "right") {
+        ctx.moveTo(player.x + player.width, centerY);
+        ctx.lineTo(player.x + player.width + 15, centerY - 10);
+    }
+
+    if (player.direction === "left") {
+        ctx.moveTo(player.x, centerY);
+        ctx.lineTo(player.x - 15, centerY - 10);
+    }
+
+    if (player.direction === "up") {
+        ctx.moveTo(centerX, player.y);
+        ctx.lineTo(centerX + 10, player.y - 15);
+    }
+
+    if (player.direction === "down") {
+        ctx.moveTo(centerX, player.y + player.height);
+        ctx.lineTo(centerX + 10, player.y + player.height + 15);
+    }
+
+    ctx.stroke();
 }
 
 function checkLevelUp(){
@@ -126,4 +168,26 @@ function checkLevelUp(){
     }
 }
 
-export { player, updatePlayer, drawPlayer,checkLevelUp };
+function resetPlayer() {
+    player.x = 375;
+    player.y = 375;
+
+    player.health = 100;
+    player.maxHealth = 100;
+
+    player.xp = 0;
+    player.xpToNextLevel = 100;
+
+    player.level = 1;
+    player.score = 0;
+
+    player.direction = "right";
+}
+
+export {
+    player,
+    updatePlayer,
+    drawPlayer,
+    checkLevelUp,
+    resetPlayer
+};

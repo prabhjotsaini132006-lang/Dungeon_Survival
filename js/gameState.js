@@ -5,4 +5,11 @@ const gameState = {
     maxWaves: 10
 };
 
-export { gameState };
+function resetGame() {
+    gameState.current = "waves";
+    gameState.currentWave = 1;
+}
+
+export { gameState,
+    resetGame
+ };
