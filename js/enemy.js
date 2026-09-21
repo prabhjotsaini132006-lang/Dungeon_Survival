@@ -9,12 +9,23 @@ const enemy = {
     speed: 1.5,
     damage: 10,
 
+    health: 100,
+    maxHealth: 100,
+
     attackCooldown: 500,
     lastAttackTime: 0
 };
 
-function updateEnemy() {
+function isEnemyAlive() {
+    return enemy.health > 0;
+}
 
+
+
+function updateEnemy() {
+    if (!isEnemyAlive()) {
+    return;
+}
     if (enemy.x < player.x) {
         enemy.x += enemy.speed;
     }
@@ -51,6 +62,11 @@ function updateEnemy() {
 }
 
 function drawEnemy(ctx) {
+
+    if (!isEnemyAlive()) {
+        return;
+    }
+
     ctx.fillStyle = "#e74c3c";
 
     ctx.fillRect(
@@ -71,4 +87,9 @@ function drawEnemy(ctx) {
     );
 }
 
-export { enemy, updateEnemy, drawEnemy };
+export {
+    enemy,
+    updateEnemy,
+    drawEnemy,
+    isEnemyAlive
+};

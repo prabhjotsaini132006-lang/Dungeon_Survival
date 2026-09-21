@@ -9,6 +9,8 @@ const player = {
     height: 50,
     speed: 5,
 
+    direction: "right",
+
     health: 100,
     maxHealth: 100,
 
@@ -22,6 +24,8 @@ const player = {
 function updatePlayer(canvas) {
 
     if (keys["w"] || keys["arrowup"]) {
+        player.direction = "up";
+
         player.y -= player.speed;
 
         for (const wall of walls) {
@@ -32,6 +36,8 @@ function updatePlayer(canvas) {
     }
 
     if (keys["s"] || keys["arrowdown"]) {
+        player.direction = "down";
+
         player.y += player.speed;
 
         for (const wall of walls) {
@@ -42,6 +48,8 @@ function updatePlayer(canvas) {
     }
 
     if (keys["a"] || keys["arrowleft"]) {
+        player.direction = "left";
+        
         player.x -= player.speed;
 
         for (const wall of walls) {
@@ -52,6 +60,8 @@ function updatePlayer(canvas) {
     }
 
     if (keys["d"] || keys["arrowright"]) {
+        player.direction = "right";
+        
         player.x += player.speed;
 
         for (const wall of walls) {
