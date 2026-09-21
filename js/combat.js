@@ -1,7 +1,9 @@
 import { keys } from "./input.js";
 import { player } from "./player.js";
 import { enemies } from "./enemy.js";
+import { boss } from "./boss.js";
 import { isColliding } from "./collision.js";
+import { gameState } from "./gameState.js";
 
 const attack = {
     width: 30,
@@ -86,6 +88,25 @@ function updateCombat() {
                 }
             }
         }
+
+    if (boss.active && boss.health > 0) {
+    if (isColliding(attackBox, boss)) {
+        boss.health -= attack.damage;
+
+        if (boss.health < 0) {
+            boss.health = 0;
+        }
+
+       if (boss.health === 0) {
+        boss.active = false;
+
+        player.xp += 250;
+        player.score += 1000;
+
+        gameState.current = "victory";
+    }
+    }
+}
 
         attack.lastAttackTime = currentTime;
 
