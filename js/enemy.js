@@ -122,37 +122,99 @@ function updateEnemies() {
 }
 
 function drawEnemies(ctx) {
+    const currentTime = performance.now();
 
     for (const enemy of enemies) {
+        if (enemy.health <= 0) continue;
 
-        if (enemy.health <= 0) {
-            continue;
+        const centerX = enemy.x + enemy.width / 2;
+        const centerY = enemy.y + enemy.height / 2;
+
+     
+        if (
+            enemy.hitFlash &&
+            currentTime < enemy.hitFlashUntil
+        ) {
+            ctx.fillStyle = "#ffffff";
+        } else {
+            enemy.hitFlash = false;
+            ctx.fillStyle = "#c0392b";
         }
 
-       const currentTime = performance.now();
+        ctx.fillRect(
+            enemy.x + 4,
+            enemy.y + 8,
+            enemy.width - 8,
+            enemy.height - 8
+        );
 
-    if (enemy.hitFlash && currentTime < enemy.hitFlashUntil) {
-        ctx.fillStyle = "#ffffff";
-    } else {
-        enemy.hitFlash = false;
-        ctx.fillStyle = "#e74c3c";
-    }
+        ctx.fillStyle = enemy.hitFlash ? "#ffffff" : "#e74c3c";
+
+        ctx.beginPath();
+        ctx.arc(
+            centerX,
+            enemy.y + 10,
+            13,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+
+        ctx.fillStyle = "#111111";
 
         ctx.fillRect(
-            enemy.x,
-            enemy.y,
-            enemy.width,
-            enemy.height
+            centerX - 8,
+            enemy.y + 7,
+            5,
+            5
         );
+
+        ctx.fillRect(
+            centerX + 3,
+            enemy.y + 7,
+            5,
+            5
+        );
+
+        ctx.fillStyle = "#7f8c8d";
+
+        ctx.beginPath();
+        ctx.moveTo(enemy.x + 7, enemy.y + 2);
+        ctx.lineTo(enemy.x + 12, enemy.y - 8);
+        ctx.lineTo(enemy.x + 17, enemy.y + 5);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(enemy.x + enemy.width - 7, enemy.y + 2);
+        ctx.lineTo(enemy.x + enemy.width - 12, enemy.y - 8);
+        ctx.lineTo(enemy.x + enemy.width - 17, enemy.y + 5);
+        ctx.fill();
+
 
         ctx.strokeStyle = "#ffffff";
         ctx.lineWidth = 2;
 
         ctx.strokeRect(
+            enemy.x + 4,
+            enemy.y + 8,
+            enemy.width - 8,
+            enemy.height - 8
+        );
+
+        ctx.fillStyle = "#222222";
+        ctx.fillRect(
             enemy.x,
-            enemy.y,
+            enemy.y - 8,
             enemy.width,
-            enemy.height
+            5
+        );
+
+        ctx.fillStyle = "#2ecc71";
+        ctx.fillRect(
+            enemy.x,
+            enemy.y - 8,
+            enemy.width * (enemy.health / enemy.maxHealth),
+            5
         );
     }
 }

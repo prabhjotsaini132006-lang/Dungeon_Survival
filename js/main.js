@@ -20,7 +20,9 @@ import { gameState,
 import {
     drawFloor,
     drawWalls,
-    drawPillars
+    drawPillars,
+    drawTorches,
+    drawLighting
 } from "./dungeon.js";
 
 import { drawHUD } from "./hud.js";
@@ -136,10 +138,13 @@ function draw() {
         drawGameOverScreen();
     }
 
-    drawPlayer(ctx);
-    drawAttack(ctx);
-    drawDamageNumbers(ctx);
-    drawHUD(ctx, player);
+   drawLighting(ctx, canvas);
+
+   drawPlayer(ctx);
+   drawAttack(ctx);
+   drawDamageNumbers(ctx);
+
+   drawHUD(ctx, player);
 }
 
 function restartGame() {
